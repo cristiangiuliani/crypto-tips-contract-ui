@@ -1,6 +1,8 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Container, Grid } from '@mui/system';
+import {
+  Container, Grid,
+} from '@mui/system';
 
 import TipsCounter from '../components/TipsCounter.component';
 import SendTipFormContainer from '../containers/SendTipForm.container';
@@ -23,13 +25,17 @@ const PageLayout = () => {
         margin: 0,
         width: '100%',
         maxWidth: '100% !important',
+        height: '100vh',
+        alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'center',
       }}
       >
-        <Grid container justifyContent='center' alignItems='center' sx={{ height: '100vh' }}>
+        <Grid container spacing={2} justifyContent='center' alignItems='flex-start'>
           <Grid sx={{ maxWidth: '22rem' }}>
             <SendTipFormContainer />
           </Grid>
-          <Grid>
+          <Grid size="auto" alignItems="flex-start">
             <TipsCounter />
             <TipsListContainer />
           </Grid>
