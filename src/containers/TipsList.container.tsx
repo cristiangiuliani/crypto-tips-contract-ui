@@ -1,21 +1,24 @@
-import { useEffect, useState } from 'react';
+import {
+  useContext, useEffect, useState,
+} from 'react';
 import { formatEther } from 'viem';
 import { useAccount, usePublicClient } from 'wagmi';
 
 import TipsListComponent from '../components/TipsList.component';
-import { TIP_JAR_CONFIG } from '../config';
 import { useFetchOnReceived } from '../hooks/useFetchOnReceived.hook';
 import type { ITip } from '../interfaces/tips.interface';
+import GlobalsContext from '../providers/Globals.context';
 
 const TipsListContainer = () => {
   const [tips, setTips] = useState<ITip[]>([]);
   const [loading, setLoading] = useState(true);
+  const { blockchainConfig } = useContext(GlobalsContext);
 
   const { chain } = useAccount();
   const publicClient = usePublicClient({ chainId: chain?.id });
 
   const fetchTips = async () => {
-    if (!publicClient) return;
+    if (!publicClient || !blockchainConfig) return;
 
     try {
       setLoading(true);
@@ -24,7 +27,8 @@ const TipsListContainer = () => {
       const fromBlock = currentBlock - 1000n;
 
       const logs = await publicClient.getContractEvents({
-        ...TIP_JAR_CONFIG,
+        address: blockchainConfig.address,
+        abi: blockchainConfig.abi,
         eventName: 'TipReceived',
         fromBlock: fromBlock > 0n ? fromBlock : 0n,
         toBlock: 'latest',

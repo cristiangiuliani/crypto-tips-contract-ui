@@ -1,10 +1,12 @@
+import { useContext } from 'react';
 import { useWatchContractEvent } from 'wagmi';
 
-import { TIP_JAR_CONFIG } from '../config';
+import GlobalsContext from '../providers/Globals.context';
 
 export const useFetchOnReceived = ({ callback = () => {} }) => {
+  const { blockchainConfig = {} } = useContext(GlobalsContext);
   useWatchContractEvent({
-    ...TIP_JAR_CONFIG,
+    ...blockchainConfig,
     eventName: 'TipReceived',
     onLogs() {
       callback();

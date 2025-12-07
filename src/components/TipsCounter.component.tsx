@@ -1,13 +1,15 @@
+import { useContext } from 'react';
 import { useReadContract } from 'wagmi';
 
-import { TIP_JAR_CONFIG } from '../config';
 import { useFetchOnReceived } from '../hooks/useFetchOnReceived.hook';
+import GlobalsContext from '../providers/Globals.context';
 
 const TipsCounter = () => {
+  const { blockchainConfig = {} } = useContext(GlobalsContext);
   const {
     data: totalTips, isLoading, error, refetch,
   } = useReadContract({
-    ...TIP_JAR_CONFIG,
+    ...blockchainConfig,
     functionName: 'totalTipsCount',
   });
 

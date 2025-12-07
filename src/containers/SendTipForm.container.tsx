@@ -1,12 +1,17 @@
-import { parseEther } from 'viem';
+import { useContext } from 'react';
+import {
+  parseEther,
+} from 'viem';
 import {
   useWriteContract, useWaitForTransactionReceipt,
 } from 'wagmi';
 
 import SendTipForm from '../components/SendTipForm.component';
-import { TIP_JAR_CONFIG } from '../config';
+import GlobalsContext, { type IGlobalsContext } from '../providers/Globals.context';
 
 const SendTipFormContainer = () => {
+  const { blockchainConfig } : IGlobalsContext = useContext(GlobalsContext);
+
   const {
     data: hash, writeContract, isPending, error,
   } = useWriteContract();
@@ -16,17 +21,18 @@ const SendTipFormContainer = () => {
   });
 
   const sendTransaction = async (amount: number, message: string, isConnected: boolean, callback: () => void) => {
-    if (!isConnected) {
+    if (!isConnected || !blockchainConfig?.address || !blockchainConfig?.abi) {
       alert('Please connect your wallet first!');
       return;
     }
 
     try {
       await writeContract({
-        ...TIP_JAR_CONFIG,
+        address: blockchainConfig.address,
+        abi: blockchainConfig.abi,
         functionName: 'sendTip',
         args: [message],
-        value: parseEther(String(amount)),
+        value: parseEther(amount.toString()),
       });
       callback();
     } catch (err) {

@@ -6,22 +6,21 @@ import React from 'react';
 import { http } from 'viem';
 import { WagmiProvider } from 'wagmi';
 import {
-  sepolia, // anvil,
+  sepolia, anvil,
 } from 'wagmi/chains';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
 const BlockchainProvider = ({ children }: { children: React.ReactNode }) => {
-  // RainbowKit config
   const config = getDefaultConfig({
     appName: 'TipsJar',
     projectId: 'acefd871415f61f89068d028cf27a085',
     chains: [
-      // anvil,
+      anvil,
       sepolia,
     ],
     transports: {
-      // [anvil.id]: http('http://127.0.0.1:8545'),
+      [anvil.id]: http(),
       [sepolia.id]: http(),
     },
   });
